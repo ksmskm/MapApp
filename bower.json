@@ -1,0 +1,27 @@
+{
+  "name": "scotchmap",
+  "description": "",
+  "directory": "./bower_components",
+  "main": "server.js",
+  "authors": [
+    "Kyle Marvich <ksmarvich@gmail.com>"
+  ],
+  "license": "ISC",
+  "moduleType": [],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/src/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-route": "1.4.6",
+    "angularjs-geolocation": "0.1.1",
+    "bootstrap": "3.3.5",
+    "modernizr": "3.0.0",
+    "holderjs": "^2.9.3"
+  }
+}
