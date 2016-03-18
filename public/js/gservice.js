@@ -1,4 +1,4 @@
-angular.module('gservice', []).factory('gservice', function($http) {
+angular.module('gservice', []).factory('gservice', function($rootScope, $http) {
   var googleMapService = {};
   var locations = [];
   var selectedLat = 39.50;
@@ -83,23 +83,26 @@ angular.module('gservice', []).factory('gservice', function($http) {
     });
     lastMarker = marker;
 
-    // map.panTo(new google.maps.LatLng(latitude, longitude));
+    map.panTo(new google.maps.LatLng(latitude, longitude));
 
-    // google.maps.event.addListener(map, 'click', function(e) {
-    //   var marker = new google.maps.Marker({
-    //     position: e.latLng,
-    //     animation: google.maps.Animation.BOUNCE,
-    //     map: map,
-    //     icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
-    //   });
+    google.maps.event.addListener(map, 'click', function(e) {
+      var marker = new google.maps.Marker({
+        position: e.latLng,
+        map: map,
+        icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+      });
 
-    //   if (lastMarker) {
-    //     lastMarker.setMap(null);
-    //   }
+      if (lastMarker) {
+        lastMarker.setMap(null);
+      }
 
-    //   lastMarker = marker;
-    //   // map.panTo(marker.position);
-    // });
+      lastMarker = marker;
+      map.panTo(marker.position);
+
+      googleMapService.clickLat = marker.getPosition().lat();
+      googleMapService.clickLong = marker.getPosition().lng();
+      $rootScope.$broadcast("clicked");
+    });
   };
   google.maps.event.addDomListener(window, 'load', googleMapService.refresh(selectedLat, selectedLong));
 

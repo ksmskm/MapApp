@@ -1,6 +1,6 @@
 var addCtrl = angular.module('addCtrl', ['geolocation', 'gservice']);
 
-addCtrl.controller('addCtrl', function($scope, $http, geolocation, gservice) {
+addCtrl.controller('addCtrl', function($scope, $http, $rootScope, geolocation, gservice) {
   $scope.formData = {};
   var coords = {};
   var lat = 0;
@@ -8,6 +8,14 @@ addCtrl.controller('addCtrl', function($scope, $http, geolocation, gservice) {
 
   $scope.formData.latitude = 39.500;
   $scope.formData.longitude = -98.350;
+
+  $rootScope.$on('clicked', function() {
+    $scope.$apply(function() {
+      $scope.formData.latitude = parseFloat(gservice.clickLat).toFixed(3);
+      $scope.formData.longitude = parseFloat(gservice.clickLong).toFixed(3);
+      $scope.formData.htmlverified = 'Nope (Thanks for spamming my map...)';
+    });
+  });
 
   $scope.createUser = function() {
     var userData = {
