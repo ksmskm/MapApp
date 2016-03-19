@@ -7,17 +7,22 @@ angular.module('gservice', []).factory('gservice', function($rootScope, $http) {
   googleMapService.clickLat = 0;
   googleMapService.clickLong = 0;
 
-  googleMapService.refresh = function(latitude, longitude) {
+  googleMapService.refresh = function(latitude, longitude, filteredResults) {
     locations = [];
     selectedLat = latitude;
     selectedLong = longitude;
 
-    $http.get('/users')
-      .success(function(response) {
-        locations = convertToMapPoints(response);
-        initialize(latitude, longitude);
-      })
-      .error(function() {});
+    if (filteredResults) {
+      locations = convertToMapPoints(filteredResults);
+      initialize(latitude, longitude, true);
+    } else {
+      $http.get('/users')
+        .success(function(response) {
+          locations = convertToMapPoints(response);
+          initialize(latitude, longitude, false);
+        })
+        .error(function() {});
+    }
   };
 
   var convertToMapPoints = function(response) {
@@ -47,25 +52,31 @@ angular.module('gservice', []).factory('gservice', function($rootScope, $http) {
     return locations;
   };
 
-  var initialize = function(latitude, longitude) {
+  var initialize = function(latitude, longitude, filter) {
     var myLatLng = {
       lat: selectedLat,
       lng: selectedLong
     };
 
-    // if (!map) {
-    // }
-    var map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 3,
-      center: myLatLng
-    });
+    if (!map) {
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 3,
+        center: myLatLng
+      });
+    }
+
+    if (filter) {
+      icon = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png';
+    } else {
+      icon = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+    }
 
     locations.forEach(function(n, i) {
       var marker = new google.maps.Marker({
         position: n.latlon,
         map: map,
         title: 'Big Map',
-        icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+        icon: icon
       });
 
       google.maps.event.addListener(marker, 'click', function(e) {
@@ -77,7 +88,6 @@ angular.module('gservice', []).factory('gservice', function($rootScope, $http) {
     var initialLocation = new google.maps.LatLng(latitude, longitude);
     var marker = new google.maps.Marker({
       position: initialLocation,
-      animation: google.maps.Animation.BOUNCE,
       map: map,
       icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
     });

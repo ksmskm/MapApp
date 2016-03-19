@@ -1,5 +1,6 @@
 var app = angular.module('meanMapApp', [
-  'addCtrl', 
+  'addCtrl',
+  'queryCtrl',
   'geolocation', 
   'gservice',
   'ngRoute'
@@ -12,7 +13,8 @@ app.config(function($routeProvider) {
       templateUrl: 'partials/addForm.html',
     })
     .when('/find', {
-      templateUrl: 'partials/queryForm.html',
+      controller: 'queryCtrl',
+      templateUrl: 'partials/queryForm.html'
     })
     .otherwise({redirectTo: '/join'});
 });
