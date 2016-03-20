@@ -18,6 +18,6 @@ app.config(function($routeProvider, $locationProvider) {
     })
     .otherwise({redirectTo: '/join'});
 
-    // removes # from URLs
+    // to remove /# from URLs
     $locationProvider.html5Mode(true);
 });

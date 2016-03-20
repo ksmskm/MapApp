@@ -13,19 +13,15 @@
     "**/.*",
     "node_modules",
     "bower_components",
-    "app/src/bower_components",
     "test",
     "tests"
   ],
   "dependencies": {
-    "angular-route": "1.4.6",
+    "angular": "^1.5.2",
+    "angular-route": "^1.5.2",
     "angularjs-geolocation": "0.1.1",
-    "bootstrap": "3.3.5",
+    "bootstrap": "^3.3.6",
     "modernizr": "3.0.0",
     "holderjs": "^2.9.3"
-  },
-  "devDependencies": {
-    "angular": "^1.5.2",
-    "angular-route": "^1.5.2"
   }
 }
