@@ -6,7 +6,7 @@ var app = angular.module('meanMapApp', [
   'ngRoute'
 ]);
 
-app.config(function($routeProvider) {
+app.config(function($routeProvider, $locationProvider) {
   $routeProvider
     .when('/join', {
       controller: 'addCtrl',
@@ -17,4 +17,7 @@ app.config(function($routeProvider) {
       templateUrl: 'partials/queryForm.html'
     })
     .otherwise({redirectTo: '/join'});
+
+    // removes # from URLs
+    $locationProvider.html5Mode(true);
 });

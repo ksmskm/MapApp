@@ -4,8 +4,8 @@ angular.module('gservice', []).factory('gservice', function($rootScope, $http) {
   var selectedLat = 39.50;
   var selectedLong = -98.35;
   
-  googleMapService.clickLat = 0;
-  googleMapService.clickLong = 0;
+  googleMapService.currentLat = 0;
+  googleMapService.currentLong = 0;
 
   googleMapService.refresh = function(latitude, longitude, filteredResults) {
     locations = [];
@@ -16,12 +16,10 @@ angular.module('gservice', []).factory('gservice', function($rootScope, $http) {
       locations = convertToMapPoints(filteredResults);
       initialize(latitude, longitude, true);
     } else {
-      $http.get('/users')
-        .success(function(response) {
-          locations = convertToMapPoints(response);
-          initialize(latitude, longitude, false);
-        })
-        .error(function() {});
+      $http.get('/users').then(function(rsp) {
+        locations = convertToMapPoints(rsp.data);
+        initialize(latitude, longitude, false);
+      }); 
     }
   };
 
@@ -65,11 +63,7 @@ angular.module('gservice', []).factory('gservice', function($rootScope, $http) {
       });
     }
 
-    if (filter) {
-      icon = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png';
-    } else {
-      icon = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
-    }
+    icon = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
 
     locations.forEach(function(n, i) {
       var marker = new google.maps.Marker({
@@ -109,10 +103,30 @@ angular.module('gservice', []).factory('gservice', function($rootScope, $http) {
       lastMarker = marker;
       map.panTo(marker.position);
 
-      googleMapService.clickLat = marker.getPosition().lat();
-      googleMapService.clickLong = marker.getPosition().lng();
-      $rootScope.$broadcast("clicked");
+      googleMapService.currentLat = marker.getPosition().lat();
+      googleMapService.currentLong = marker.getPosition().lng();
+      $rootScope.$broadcast("marker_moved");
     });
+
+    google.maps.event.addListener(map, 'drag', function(e) {
+      var marker;
+      if (lastMarker) {
+        marker = lastMarker; 
+      } else {
+        marker = new google.maps.Marker({
+          position: map.getCenter(),
+          map: map,
+          icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+        });
+      }
+
+      marker.setPosition(map.getCenter());
+      lastMarker = marker;
+
+      googleMapService.currentLat = marker.getPosition().lat();
+      googleMapService.currentLong = marker.getPosition().lng();
+      $rootScope.$broadcast("marker_moved");
+    });    
   };
   google.maps.event.addDomListener(window, 'load', googleMapService.refresh(selectedLat, selectedLong));
 

@@ -17,13 +17,14 @@ function qcontroller($scope, $log, $http, $rootScope, geolocation, gservice) {
 
     $scope.formData.longitude = parseFloat(coords.long).toFixed(3);
     $scope.formData.latitude = parseFloat(coords.lat).toFixed(3);
-
+    
+    gservice.refresh($scope.formData.latitude, $scope.formData.longitude);
   });
 
-  $rootScope.$on('clicked', function() {
+  $rootScope.$on('marker_moved', function() {
     $scope.$apply(function() {
-      $scope.formData.latitude = parseFloat(gservice.clickLat).toFixed(3);
-      $scope.formData.longitude = parseFloat(gservice.clickLong).toFixed(3);
+      $scope.formData.latitude = parseFloat(gservice.currentLat).toFixed(3);
+      $scope.formData.longitude = parseFloat(gservice.currentLong).toFixed(3);
     });
   });
 
@@ -41,15 +42,10 @@ function qcontroller($scope, $log, $http, $rootScope, geolocation, gservice) {
       reqVerified: $scope.formData.verified
     };
 
-    $http.post('/query', queryBody)
-      .success(function(queryResults) {
-        gservice.refresh(queryBody.latitude, queryBody.longitude, queryResults);
-
-        $scope.queryCount = queryResults.length;
-      })
-      .error(function(queryResults) {
-        console.log('Error ' + queryResults);
-      });
+    $http.post('/query', queryBody).then(function(rsp) {
+      gservice.refresh(queryBody.latitude, queryBody.longitude, rsp.data);
+      $scope.queryCount = rsp.data.length;
+    });
   };
 }
 

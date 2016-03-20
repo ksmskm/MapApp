@@ -23,5 +23,9 @@
     "bootstrap": "3.3.5",
     "modernizr": "3.0.0",
     "holderjs": "^2.9.3"
+  },
+  "devDependencies": {
+    "angular": "^1.5.2",
+    "angular-route": "^1.5.2"
   }
 }

@@ -1,7 +1,9 @@
 var mongoose = require('mongoose');
 var User = require('./model.js');
 
-function routes(app) {
+function routes(app) {  
+  var verified_message = "Yep (Thanks for giving us real data!)";
+
   app.get('/users', function(req, res) {
     var query = User.find({});
     query.exec(function(err, users) {
@@ -52,27 +54,21 @@ function routes(app) {
       ]);
     }
 
-    if (minAge) {
-      query = query.where('age').gte(minAge);
-    }
-
-    if (maxAge) {
-      query = query.where('age').lte(maxAge);
-    }
-
-    if (favlang) {
-      query = query.where('favlang').equals(favlang);
-    }
-
-    if (reqVerified) {
-      query = query.where('htmlverified').equals("Yep (Thanks for giving us real data!)");
-    }
+    if (minAge) query = query.where('age').gte(minAge);
+    if (maxAge) query = query.where('age').lte(maxAge);
+    if (favlang) query = query.where('favlang').equals(favlang);
+    if (reqVerified) query = query.where('htmlverified').equals(verified_message);
 
     query.exec(function(err, users) {
       if (err) res.send(err);
       res.json(users);
     });
   });
+
+  // frontend routes =========================================================
+  app.get('*', function(req, res) {
+    res.sendfile('public/index.html');
+  });  
 }
 
 module.exports = routes;
