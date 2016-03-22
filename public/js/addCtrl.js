@@ -11,19 +11,19 @@ function acontroller($scope, $http, $rootScope, geolocation, gservice) {
   $scope.formData.latitude = 39.500;
   $scope.formData.longitude = -98.350;
 
-  geolocation.getLocation().then(function(data) {
-    coords = {
-      lat: data.coords.latitude,
-      long: data.coords.longitude
-    };
+  // geolocation.getLocation().then(function(data) {
+  //   coords = {
+  //     lat: data.coords.latitude,
+  //     long: data.coords.longitude
+  //   };
 
-    $scope.formData.longitude = parseFloat(coords.long).toFixed(3);
-    $scope.formData.latitude = parseFloat(coords.lat).toFixed(3);
+  //   $scope.formData.longitude = parseFloat(coords.long).toFixed(3);
+  //   $scope.formData.latitude = parseFloat(coords.lat).toFixed(3);
 
-    $scope.formData.htmlverified = "Yep (Thanks for giving us real data!)";
+  //   $scope.formData.htmlverified = "Yep (Thanks for giving us real data!)";
 
-    gservice.refresh($scope.formData.latitude, $scope.formData.longitude);
-  });
+  //   gservice.refresh($scope.formData.latitude, $scope.formData.longitude);
+  // });
 
   $rootScope.$on('marker_moved', function() {
     $scope.$apply(function() {

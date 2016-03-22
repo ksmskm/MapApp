@@ -1,6 +1,7 @@
 var app = angular.module('meanMapApp', [
   'addCtrl',
   'queryCtrl',
+  'extraCtrl',
   'geolocation', 
   'gservice',
   'ngRoute'
