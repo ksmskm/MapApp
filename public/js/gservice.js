@@ -4,7 +4,7 @@ angular.module('gservice', []).factory('gservice', function($rootScope, $http, g
   var locationMarkers = [];
   var currentLat = 39.50;
   var currentLong = -98.35;
-  var currentMarker = null;
+  var currentMarker;
   var map;
   geolocation.getLocation().then(function(data) {
     currentLat = parseFloat(data.coords.latitude).toFixed(3);
@@ -24,6 +24,7 @@ angular.module('gservice', []).factory('gservice', function($rootScope, $http, g
       n.setMap(null);
     });
     locationMarkers = [];
+    locations = [];
   }; 
 
   googleMapService.refresh = function(latitude, longitude, filteredResults) { 
