@@ -31,11 +31,10 @@
 </head>
 <body>
 <div class="container">
-  <div class="header">
+  <div class="header" ng-controller="extraCtrl">
     <ul class="nav nav-pills pull-right">
-      <li ng-controller="extraCtrl">
-        <a ng-click="refresh()">Refresh</a>
-      </li>
+      <li><a href="" ng-click="clear()">Clear</a></li>
+      <li><a href="" ng-click="refresh()">Refresh</a></li>
       <li><a href="/join">Join the Team</a></li>
       <li><a href="/find">Find Teammates</a></li>
     </ul>
