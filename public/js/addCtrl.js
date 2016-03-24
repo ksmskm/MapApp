@@ -30,7 +30,7 @@ function acontroller($scope, $http, $rootScope, geolocation, gservice) {
       $scope.formData.gender = "";
       $scope.formData.age = "";
       $scope.formData.favlang = "";
-      gservice.refresh($scope.formData.latitude, formData.longitude);
+      gservice.refresh($scope.formData.latitude, $scope.formData.longitude);
     });
   };
 }

@@ -9,8 +9,4 @@ function econtroller($scope, gservice, geolocation) {
       gservice.refresh(latitude, longitude);
     });
   };
-  
-  $scope.clear = function() {
-    gservice.clear();
-  };
 }
