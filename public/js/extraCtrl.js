@@ -13,6 +13,4 @@ function econtroller($scope, gservice, geolocation) {
   $scope.clear = function() {
     gservice.clear();
   };
-
-  $scope.refresh();
 }

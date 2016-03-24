@@ -4,21 +4,19 @@ angular.module('gservice', []).factory('gservice', function($rootScope, $http, g
   var locationMarkers = [];
   var currentLat = 39.50;
   var currentLong = -98.35;
+  var currentMarker = null;
   var map;
   geolocation.getLocation().then(function(data) {
-    var latitude = parseFloat(data.coords.latitude).toFixed(3);
-    var longitude = parseFloat(data.coords.longitude).toFixed(3);
-    var map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 3,
-      center: new google.maps.LatLng(latitude, longitude)
-    });
-    gservice.refresh(latitude, longitude);    
-  }, function() {
-    var map = new google.maps.Map(document.getElementById('map'), {
+    currentLat = parseFloat(data.coords.latitude).toFixed(3);
+    currentLong = parseFloat(data.coords.longitude).toFixed(3);
+    map = new google.maps.Map(document.getElementById('map'), {
       zoom: 3,
       center: new google.maps.LatLng(currentLat, currentLong)
     });
-    gservice.refresh(currentLat, currentLong);
+    $http.get('/users').then(function(rsp) {
+      locations = convertToMapPoints(rsp.data);
+      initialize(currentLat, currentLong);    
+    });
   });
 
   googleMapService.clear = function() {
@@ -29,25 +27,19 @@ angular.module('gservice', []).factory('gservice', function($rootScope, $http, g
   }; 
 
   googleMapService.refresh = function(latitude, longitude, filteredResults) { 
-    var locationMarkers = [];
+    locationMarkers = [];
     if (filteredResults) {
       locations = convertToMapPoints(filteredResults);
-      initialize(latitude, longitude, true);
+      initialize(latitude, longitude);
     } else {
       $http.get('/users').then(function(rsp) {
         locations = convertToMapPoints(rsp.data);
-        initialize(latitude, longitude, false);
+        initialize(latitude, longitude);
       });
     }
   };
 
-  var initialize = function(latitude, longitude, filter) {
-
-    var map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 3,
-      center: new google.maps.LatLng(latitude, longitude)
-    });
-
+  var initialize = function(latitude, longitude) {
     locations.forEach(function(n) {
       var marker = new google.maps.Marker({
         position: n.latlon,
@@ -61,54 +53,28 @@ angular.module('gservice', []).factory('gservice', function($rootScope, $http, g
       });
     });
 
-    var marker = new google.maps.Marker({
+    if (currentMarker) currentMarker.setMap(null);
+    currentMarker = new google.maps.Marker({
       position: new google.maps.LatLng(latitude, longitude),
       map: map,
       icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
     });
-    lastMarker = marker;
 
     map.panTo(new google.maps.LatLng(latitude, longitude));
 
-    google.maps.event.addListener(map, 'click', onClickMap);
-    google.maps.event.addListener(map, 'drag', onDragMap);    
-    function onDragMap(e) {
-      var marker;
-      if (lastMarker) {
-        marker = lastMarker; 
-      } else {
-        marker = new google.maps.Marker({
-          position: map.getCenter(),
-          map: map,
-          icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
-        });
-      }
-
-      marker.setPosition(map.getCenter());
-      lastMarker = marker;
-
-      googleMapService.currentLat = marker.getPosition().lat();
-      googleMapService.currentLong = marker.getPosition().lng();
+    google.maps.event.addListener(map, 'click', function(e) {
+      currentMarker.setPosition(e.latLng);
+      map.panTo(currentMarker.position);
+      googleMapService.currentLat = currentMarker.getPosition().lat();
+      googleMapService.currentLong = currentMarker.getPosition().lng();
       $rootScope.$broadcast("marker_moved");
-    }
-    function onClickMap(e) {
-      var marker = new google.maps.Marker({
-        position: e.latLng,
-        map: map,
-        icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
-      });
-
-      if (lastMarker) {
-        lastMarker.setMap(null);
-      }
-
-      lastMarker = marker;
-      map.panTo(marker.position);
-
-      googleMapService.currentLat = marker.getPosition().lat();
-      googleMapService.currentLong = marker.getPosition().lng();
+    });
+    google.maps.event.addListener(map, 'drag', function(e) {
+      currentMarker.setPosition(map.getCenter());
+      googleMapService.currentLat = currentMarker.getPosition().lat();
+      googleMapService.currentLong = currentMarker.getPosition().lng();
       $rootScope.$broadcast("marker_moved");
-    }
+    });    
   };
   return googleMapService;
 });
