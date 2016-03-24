@@ -6,13 +6,16 @@ var queryCtrl = angular.module('queryCtrl', [
 queryCtrl.controller('queryCtrl', qcontroller);
 
 function qcontroller($scope, $log, $http, $rootScope, geolocation, gservice) {
-  $scope.formData = {};
+  $scope.formData = {
+    latitude: gservice.currentLat,
+    longitude: gservice.currentLong
+  };
   var queryBody = {};
 
   $rootScope.$on('marker_moved', function() {
     $scope.$apply(function() {
-      $scope.formData.latitude = parseFloat(gservice.currentLat).toFixed(3);
-      $scope.formData.longitude = parseFloat(gservice.currentLong).toFixed(3);
+      $scope.formData.latitude = gservice.currentLat;
+      $scope.formData.longitude = gservice.currentLong;
     });
   });  
 

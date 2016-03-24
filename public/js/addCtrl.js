@@ -3,15 +3,15 @@ var addCtrl = angular.module('addCtrl', ['geolocation', 'gservice']);
 addCtrl.controller('addCtrl', acontroller);
 
 function acontroller($scope, $http, $rootScope, geolocation, gservice) {
-  $scope.formData = {};
-  var coords = {};
-  var lat = 0;
-  var long = 0;
+  $scope.formData = {
+    latitude: gservice.currentLat,
+    longitude: gservice.currentLong
+  };
 
   $rootScope.$on('marker_moved', function() {
     $scope.$apply(function() {
-      $scope.formData.latitude = parseFloat(gservice.currentLat).toFixed(3);
-      $scope.formData.longitude = parseFloat(gservice.currentLong).toFixed(3);
+      $scope.formData.latitude = gservice.currentLat;
+      $scope.formData.longitude = gservice.currentLong;
     });
   });  
 

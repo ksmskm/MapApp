@@ -91,14 +91,14 @@ angular.module('gservice', []).factory('gservice', function($rootScope, $http, g
     google.maps.event.addListener(map, 'click', function(e) {
       currentMarker.setPosition(e.latLng);
       map.panTo(currentMarker.position);
-      googleMapService.currentLat = currentMarker.getPosition().lat();
-      googleMapService.currentLong = currentMarker.getPosition().lng();
+      googleMapService.currentLat = currentMarker.getPosition().lat().toFixed(3);
+      googleMapService.currentLong = currentMarker.getPosition().lng().toFixed(3);
       $rootScope.$broadcast("marker_moved");
     });
     google.maps.event.addListener(map, 'drag', function(e) {
       currentMarker.setPosition(map.getCenter());
-      googleMapService.currentLat = currentMarker.getPosition().lat();
-      googleMapService.currentLong = currentMarker.getPosition().lng();
+      googleMapService.currentLat = currentMarker.getPosition().lat().toFixed(3);
+      googleMapService.currentLong = currentMarker.getPosition().lng().toFixed(3);
       $rootScope.$broadcast("marker_moved");
     });    
   };
