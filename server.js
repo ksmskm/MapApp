@@ -8,7 +8,7 @@ var app = express();
 
 var DB_URI = process.env.DATABASE_URL || 'mongodb://localhost/MeanMapApp';
 
-mongoose.connect();
+mongoose.connect(DB_URI);
 
 app.use(express.static(__dirname + '/public'));
 app.use('/bower_components', express.static(__dirname + '/bower_components'));
