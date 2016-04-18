@@ -7,6 +7,15 @@ function acontroller($scope, $http, $rootScope, geolocation, gservice) {
     latitude: gservice.currentLat,
     longitude: gservice.currentLong
   };
+  
+  if ($scope.formData.latitude === undefined) {
+    geolocation.getLocation().then(function(position) {
+      $scope.formData = {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude
+      };
+    });
+  }
 
   $rootScope.$on('marker_moved', function() {
     $scope.$apply(function() {
