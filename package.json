@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
-  "scripts": {
+  "scripts": {  
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "postinstall": "bower install"
+    "postinstall": "bower cache clean && bower install"
   },
   "author": "",
   "license": "ISC",
