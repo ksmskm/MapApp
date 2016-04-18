@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
-  "scripts": {  
+  "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
     "postinstall": "bower cache clean && bower install"
@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.15.0",
+    "bower": "^1.7.9",
     "dotenv": "^2.0.0",
     "express": "^4.13.4",
     "jsonwebtoken": "^5.7.0",
