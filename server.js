@@ -6,7 +6,9 @@ var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var app = express();
 
-mongoose.connect('mongodb://localhost/MeanMapApp');
+var DB_URI = process.env.DATABASE_URL || 'mongodb://localhost/MeanMapApp';
+
+mongoose.connect();
 
 app.use(express.static(__dirname + '/public'));
 app.use('/bower_components', express.static(__dirname + '/bower_components'));
