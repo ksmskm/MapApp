@@ -79,6 +79,7 @@ angular.module('gservice', []).factory('gservice', function($rootScope, $http, g
       });
       locationMarkers.push(marker);
     });
+    
     if (currentMarker) currentMarker.setMap(null);
     currentMarker = new google.maps.Marker({
       position: new google.maps.LatLng(latitude, longitude),
@@ -95,6 +96,7 @@ angular.module('gservice', []).factory('gservice', function($rootScope, $http, g
       googleMapService.currentLong = currentMarker.getPosition().lng().toFixed(3);
       $rootScope.$broadcast("marker_moved");
     });
+
     google.maps.event.addListener(map, 'drag', function(e) {
       currentMarker.setPosition(map.getCenter());
       googleMapService.currentLat = currentMarker.getPosition().lat().toFixed(3);
